@@ -1,4 +1,5 @@
 Feature: As a librarian, I want to create a new user
+
   Scenario: Create a new user API
     Given I logged Library api as a "librarian"
     And Accept header is "application/json"

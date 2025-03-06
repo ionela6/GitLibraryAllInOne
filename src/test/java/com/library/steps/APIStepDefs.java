@@ -1,6 +1,8 @@
 package com.library.steps;
 
+import com.library.pages.BasePage;
 import com.library.pages.BookPage;
+import com.library.pages.LoginPage;
 import com.library.utility.BrowserUtil;
 import com.library.utility.DB_Util;
 import com.library.utility.Driver;
@@ -27,7 +29,7 @@ import java.util.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
-public class APIStepDefs {
+public class APIStepDefs extends BasePage {
     String token;
     RequestSpecification givenPart;
     Map<String, Object> randomMap;
@@ -36,6 +38,7 @@ public class APIStepDefs {
     JsonPath jsonPath;
     String id;
     BookPage bookPage = new BookPage();
+    LoginPage loginPage = new LoginPage();
 
     @Given("I logged Library api as a {string}")
     public void i_logged_library_api_as_a(String userType) {
@@ -77,6 +80,10 @@ public class APIStepDefs {
         thenPart = response.then();
         jsonPath = response.jsonPath();
         id = jsonPath.getString("book_id");
+
+        id = jsonPath.getString("user_id");
+
+
     }
 
     @Then("status code should be {int}")
@@ -135,6 +142,42 @@ public class APIStepDefs {
         Assert.assertEquals(uiList, dbList);
         Assert.assertTrue(apiList.equals(uiList));
     }
+//DB Part For us04 :
+    @Then("created user information should match with Database")
+    public void created_user_information_should_match_with_database() {
+        DB_Util.runQuery("select full_name,email,status,start_date,end_date,address from users\n" +
+                "where id ="+id);
+        Map<String, Object> userInfoMap = DB_Util.getRowMap(1);
+        System.out.println("userInfoMap = " + userInfoMap);
+
+        //remove Password and User group id for comparing randomData with userinfo :
+        String password = (String) randomMap.remove("password");
+        String userGroupId = (String) randomMap.remove("user_group_id");
+
+        //with help of Assert going to check database and randomMap are match:
+        Assert.assertEquals(randomMap, userInfoMap);
+
+        //add back Password and User group id to randomMap because we need them in next steps :
+        randomMap.put("password", password);
+        randomMap.put("user_group_id",userGroupId);
+
+
+    }
+    //UI part for us04 :
+    @Then("created user should be able to login Library UI")
+    public void created_user_should_be_able_to_login_library_ui() {
+        loginPage.login((String) randomMap.get("email"), (String) randomMap.get("password"));
+
+        System.out.println("accountHolderName.getText() = " + accountHolderName.getText());
+
+
+    }
+    @Then("created user name should appear in Dashboard Page")
+    public void created_user_name_should_appear_in_dashboard_page() {
+
+        Assert.assertEquals(randomMap.get("full_name"), accountHolderName.getText());
+    }
+
 
 
 }

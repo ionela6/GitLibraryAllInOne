@@ -29,7 +29,7 @@ import java.util.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
-public class APIStepDefs extends BasePage {
+public class APIStepDefs  {
     String token;
     RequestSpecification givenPart;
     Map<String, Object> randomMap;
@@ -39,6 +39,7 @@ public class APIStepDefs extends BasePage {
     String id;
     BookPage bookPage = new BookPage();
     LoginPage loginPage = new LoginPage();
+
 
     @Given("I logged Library api as a {string}")
     public void i_logged_library_api_as_a(String userType) {
@@ -79,9 +80,13 @@ public class APIStepDefs extends BasePage {
         response = givenPart.post(endpoint);
         thenPart = response.then();
         jsonPath = response.jsonPath();
-        id = jsonPath.getString("book_id");
+        if (endpoint.endsWith("book")){
+            id = "book_id";
 
-        id = jsonPath.getString("user_id");
+        } else if (endpoint.endsWith("user")) {
+            id = "user_id";
+
+        }
 
 
     }
@@ -168,14 +173,14 @@ public class APIStepDefs extends BasePage {
     public void created_user_should_be_able_to_login_library_ui() {
         loginPage.login((String) randomMap.get("email"), (String) randomMap.get("password"));
 
-        System.out.println("accountHolderName.getText() = " + accountHolderName.getText());
+        System.out.println("accountHolderName.getText() = " + bookPage.accountHolderName.getText());
 
 
     }
     @Then("created user name should appear in Dashboard Page")
     public void created_user_name_should_appear_in_dashboard_page() {
 
-        Assert.assertEquals(randomMap.get("full_name"), accountHolderName.getText());
+        Assert.assertEquals(randomMap.get("full_name"), bookPage.accountHolderName.getText());
     }
 
 

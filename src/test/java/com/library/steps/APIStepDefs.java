@@ -12,6 +12,8 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -20,6 +22,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.net.URI;
 import java.time.Duration;
 import java.util.*;
 
@@ -27,6 +30,7 @@ import java.util.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
+//User story - 01
 public class APIStepDefs {
     String token;
     RequestSpecification givenPart;
@@ -36,6 +40,11 @@ public class APIStepDefs {
     JsonPath jsonPath;
     String id;
     BookPage bookPage = new BookPage();
+    String expectedpathValue;
+
+    // Declare instance variables for path parameters
+   // private String pathParamKey;
+   // private String pathParamValue;
 
     @Given("I logged Library api as a {string}")
     public void i_logged_library_api_as_a(String userType) {
@@ -135,6 +144,34 @@ public class APIStepDefs {
         Assert.assertEquals(uiList, dbList);
         Assert.assertTrue(apiList.equals(uiList));
     }
+
+    //User Story- 02 SW
+
+    @Given("Path param {string} is {string}")
+    public void path_param_is(String path, String pathValue) {
+    givenPart.pathParam(path,pathValue);
+      expectedpathValue = pathValue;
+    }
+    @When("I send GET request to {string} endpoint")
+    public void i_send_get_request_to_endpoint(String endpoint) {
+    response =givenPart.when().get(endpoint);
+    jsonPath=response.jsonPath();
+    thenPart=response.then();
+    response.prettyPeek();
+
+    }
+    @Then("{string} field should be same with path param")
+    public void field_should_be_same_with_path_param(String path) {
+    String actualpathValue =jsonPath.getString(path);
+    Assert.assertEquals(expectedpathValue,actualpathValue);
+    }
+    @Then("following fields should not be null")
+    public void following_fields_should_not_be_null(List<String>paths) {
+        for (String path : paths) {
+            thenPart.body(path, notNullValue());
+        }
+    }
+
 
 
 }

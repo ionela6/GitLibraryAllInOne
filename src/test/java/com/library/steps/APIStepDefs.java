@@ -81,10 +81,10 @@ public class APIStepDefs  {
         thenPart = response.then();
         jsonPath = response.jsonPath();
         if (endpoint.endsWith("book")){
-            id = "book_id";
+            id = jsonPath.getString("book_id");
 
         } else if (endpoint.endsWith("user")) {
-            id = "user_id";
+            id = jsonPath.getString("user_id");
 
         }
 

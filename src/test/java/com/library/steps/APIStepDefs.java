@@ -7,6 +7,7 @@ import com.library.utility.BrowserUtil;
 import com.library.utility.DB_Util;
 import com.library.utility.Driver;
 import com.library.utility.LibraryAPI_Util;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -40,6 +41,7 @@ public class APIStepDefs  {
     Response response;
     JsonPath jsonPath;
     String id;
+    JsonPath jp;
     BookPage bookPage = new BookPage();
     LoginPage loginPage = new LoginPage();
 
@@ -201,12 +203,13 @@ public class APIStepDefs  {
     }
     @When("I send GET request to {string} endpoint")
     public void i_send_get_request_to_endpoint(String endpoint) {
-    response =givenPart.when().get(endpoint);
-    jsonPath=response.jsonPath();
-    thenPart=response.then();
-    response.prettyPeek();
+        response =givenPart.when().get(endpoint);
+        jsonPath=response.jsonPath();
+        thenPart=response.then();
+        response.prettyPeek();
 
     }
+
     @Then("{string} field should be same with path param")
     public void field_should_be_same_with_path_param(String path) {
     String actualpathValue =jsonPath.getString(path);
@@ -219,6 +222,24 @@ public class APIStepDefs  {
         }
     }
 
+    //US story 1
+
+    @When("I send GET request to {string} endpoint")
+    public void iSendGETRequestToEndpoint(String endpoint) {
+        response = givenPart.when().get();
+        thenPart = response.then();
+        jp = response.jsonPath();
+
+    }
+
+    @And("Each {string} field should not be null")
+    public void eachFieldShouldNotBeNull(String jsonPath) {
+        List<Map<String, Object>> items = jp.getList(jsonPath);
+        for (Map<String, Object> item : items) {
+            for (Map.Entry<String, Object> entry : item.entrySet()) {
+                Assert.assertNotEquals(" Field " + entry.getKey() + " should not be null", entry.getValue());
+            }
+        }
 
 
-}
+    }}

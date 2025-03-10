@@ -7,6 +7,7 @@ import com.library.utility.BrowserUtil;
 import com.library.utility.DB_Util;
 import com.library.utility.Driver;
 import com.library.utility.LibraryAPI_Util;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -201,12 +202,13 @@ public class APIStepDefs  {
     }
     @When("I send GET request to {string} endpoint")
     public void i_send_get_request_to_endpoint(String endpoint) {
-    response =givenPart.when().get(endpoint);
-    jsonPath=response.jsonPath();
-    thenPart=response.then();
-    response.prettyPeek();
+        response =givenPart.when().get(endpoint);
+        jsonPath=response.jsonPath();
+        thenPart=response.then();
+        response.prettyPeek();
 
     }
+
     @Then("{string} field should be same with path param")
     public void field_should_be_same_with_path_param(String path) {
     String actualpathValue =jsonPath.getString(path);
@@ -219,6 +221,18 @@ public class APIStepDefs  {
         }
     }
 
+    //US story 1
 
 
-}
+    @And("Each {string} field should not be null")
+    public void eachFieldShouldNotBeNull(String path) {
+
+
+        List<String> allValues = jsonPath.getList(path);
+        for (String each : allValues) {
+            Assert.assertNotNull(each);
+
+        }
+
+
+    }}

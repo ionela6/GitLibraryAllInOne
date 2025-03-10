@@ -226,12 +226,7 @@ public class APIStepDefs  {
 
     @And("Each {string} field should not be null")
     public void eachFieldShouldNotBeNull(String path) {
-//        List<Map<String, Object>> items = jsonPath.getList(path);
-//        for (Map<String, Object> item : items) {
-//            for (Map.Entry<String, Object> entry : item.entrySet()) {
-//                Assert.assertNotEquals(" Field " + entry.getKey() + " should not be null", entry.getValue());
-//            }
-//        }
+
 
         List<String> allValues = jsonPath.getList(path);
         for (String each : allValues) {

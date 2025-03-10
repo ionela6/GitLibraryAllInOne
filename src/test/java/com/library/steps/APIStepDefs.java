@@ -224,13 +224,6 @@ public class APIStepDefs  {
 
     //US story 1
 
-    @When("I send GET request to {string} endpoint")
-    public void iSendGETRequestToEndpoint(String endpoint) {
-        response = givenPart.when().get();
-        thenPart = response.then();
-        jp = response.jsonPath();
-
-    }
 
     @And("Each {string} field should not be null")
     public void eachFieldShouldNotBeNull(String jsonPath) {

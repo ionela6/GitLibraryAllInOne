@@ -20,13 +20,6 @@ import static io.restassured.RestAssured.given;
 public class UIStepDefs {
     LoginPage loginPage = new LoginPage();
 
-    RequestSpecification givenPart = given().log().uri();
-
-    Response response;
-    ValidatableResponse thenPart;
-    JsonPath jp;
-
-    Map<String, Object> randomData= new HashMap<>();
 
     @Given("I logged in Library UI as {string}")
     public void i_logged_in_library_ui_as(String userType) {

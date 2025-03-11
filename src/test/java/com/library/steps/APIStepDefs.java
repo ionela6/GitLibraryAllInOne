@@ -1,11 +1,8 @@
 package com.library.steps;
-
 import com.library.pages.BookPage;
-import com.library.pages.LoginPage;
 import com.library.pages.LoginPage;
 import com.library.utility.BrowserUtil;
 import com.library.utility.DB_Util;
-import com.library.utility.Driver;
 import com.library.utility.LibraryAPI_Util;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -15,21 +12,10 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.net.URI;
-import java.time.Duration;
 import java.util.*;
-
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -53,12 +39,12 @@ public class APIStepDefs  {
     @Given("I logged Library api as a {string}")
     public void i_logged_library_api_as_a(String userType) {
         token = LibraryAPI_Util.getToken(userType);
-        givenPart = given().log().uri();
+        givenPart = given().log().uri().header("x-library-token", token);
     }
 
     @Given("Accept header is {string}")
     public void accept_header_is(String acceptHeader) {
-        givenPart.accept(acceptHeader).header("x-library-token", token);
+        givenPart.accept(acceptHeader);
     }
 
     @Given("Request Content Type header is {string}")
@@ -202,13 +188,12 @@ public class APIStepDefs  {
     }
     @When("I send GET request to {string} endpoint")
     public void i_send_get_request_to_endpoint(String endpoint) {
-        response =givenPart.when().get(endpoint);
-        jsonPath=response.jsonPath();
-        thenPart=response.then();
-        response.prettyPeek();
+    response =givenPart.when().get(endpoint);
+    jsonPath=response.jsonPath();
+    thenPart=response.then();
+    //response.prettyPeek();
 
     }
-
     @Then("{string} field should be same with path param")
     public void field_should_be_same_with_path_param(String path) {
     String actualpathValue =jsonPath.getString(path);
@@ -231,8 +216,25 @@ public class APIStepDefs  {
         List<String> allValues = jsonPath.getList(path);
         for (String each : allValues) {
             Assert.assertNotNull(each);
+}}
+    @Given("I logged Library api with credentials {string} and {string}")
+    public void i_logged_library_api_with_credentials_and(String email, String password) {
+       token =  LibraryAPI_Util.getToken(email, password);
+       givenPart = given().log().uri();
 
-        }
+
+    }
+    @Given("I send {string} information as request body")
+    public void i_send_information_as_request_body(String requestBodyParam) {
+        givenPart.body(requestBodyParam + "=" + token);
 
 
-    }}
+
+
+
+    }
+
+
+
+
+}

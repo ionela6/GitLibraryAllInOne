@@ -1,12 +1,10 @@
 package com.library.steps;
-
 import com.library.pages.BookPage;
-import com.library.pages.LoginPage;
 import com.library.pages.LoginPage;
 import com.library.utility.BrowserUtil;
 import com.library.utility.DB_Util;
-import com.library.utility.Driver;
 import com.library.utility.LibraryAPI_Util;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -14,21 +12,10 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.net.URI;
-import java.time.Duration;
 import java.util.*;
-
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -219,8 +206,17 @@ public class APIStepDefs  {
         }
     }
 
+    //US story 1
 
 
+    @And("Each {string} field should not be null")
+    public void eachFieldShouldNotBeNull(String path) {
+
+
+        List<String> allValues = jsonPath.getList(path);
+        for (String each : allValues) {
+            Assert.assertNotNull(each);
+}}
     @Given("I logged Library api with credentials {string} and {string}")
     public void i_logged_library_api_with_credentials_and(String email, String password) {
        token =  LibraryAPI_Util.getToken(email, password);

@@ -52,12 +52,12 @@ public class APIStepDefs  {
     @Given("I logged Library api as a {string}")
     public void i_logged_library_api_as_a(String userType) {
         token = LibraryAPI_Util.getToken(userType);
-        givenPart = given().log().uri();
+        givenPart = given().log().uri().header("x-library-token", token);
     }
 
     @Given("Accept header is {string}")
     public void accept_header_is(String acceptHeader) {
-        givenPart.accept(acceptHeader).header("x-library-token", token);
+        givenPart.accept(acceptHeader);
     }
 
     @Given("Request Content Type header is {string}")
@@ -218,6 +218,25 @@ public class APIStepDefs  {
             thenPart.body(path, notNullValue());
         }
     }
+
+
+
+    @Given("I logged Library api with credentials {string} and {string}")
+    public void i_logged_library_api_with_credentials_and(String email, String password) {
+       token =  LibraryAPI_Util.getToken(email, password);
+
+
+    }
+    @Given("I send {string} information as request body")
+    public void i_send_information_as_request_body(String requestBodyParam) {
+        givenPart.body(requestBodyParam + "=" + token);
+
+
+
+
+
+    }
+
 
 
 

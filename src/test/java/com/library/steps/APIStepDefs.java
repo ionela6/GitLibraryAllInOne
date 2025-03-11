@@ -191,7 +191,7 @@ public class APIStepDefs  {
     response =givenPart.when().get(endpoint);
     jsonPath=response.jsonPath();
     thenPart=response.then();
-    response.prettyPeek();
+    //response.prettyPeek();
 
     }
     @Then("{string} field should be same with path param")
@@ -220,6 +220,7 @@ public class APIStepDefs  {
     @Given("I logged Library api with credentials {string} and {string}")
     public void i_logged_library_api_with_credentials_and(String email, String password) {
        token =  LibraryAPI_Util.getToken(email, password);
+       givenPart = given().log().uri();
 
 
     }

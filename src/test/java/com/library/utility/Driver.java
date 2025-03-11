@@ -32,11 +32,17 @@ public class Driver {
         // it will check if driver is null and if it is we will set up browser inside if statement
         // if you already setup driver and using it again for following line of codes, it will return to same driver
         if (driverPool.get() == null) {
-            String browserName = System.getProperty("browser") != null ? System.getProperty("browser") : ConfigurationReader.getProperty("browser");
+           // String browserName = System.getProperty("browser") != null ? System.getProperty("browser") : ConfigurationReader.getProperty("browser");
+            String browserType="";
+            if (System.getProperty("BROWSER") == null) {
+                browserType = ConfigurationReader.getProperty("browser");
+            } else {
+                browserType = System.getProperty("BROWSER");
+            }
 
 
 
-            switch(browserName){
+            switch(browserType){
                 case "remote-chrome":
                     try {
                         // assign your grid server address
@@ -66,11 +72,11 @@ public class Driver {
                     }
                     break;
                 case "chrome":
-                    WebDriverManager.chromedriver().setup();
+                  //  WebDriverManager.chromedriver().setup();
                     driverPool.set(new ChromeDriver());
                     break;
                 case "firefox":
-                    WebDriverManager.firefoxdriver().setup();
+                 //   WebDriverManager.firefoxdriver().setup();
                     driverPool.set(new FirefoxDriver());
                     break;
             }

@@ -1,5 +1,5 @@
 Feature: As a librarian, I want to create a new user
-
+@regression
   Scenario: Create a new user API
     Given I logged Library api as a "librarian"
     And Accept header is "application/json"
@@ -13,7 +13,7 @@ Feature: As a librarian, I want to create a new user
 
 
 
-  @db @ui
+  @db @ui @regression
   Scenario: Create a new user all layers
     Given I logged Library api as a "librarian"
     And Accept header is "application/json"
